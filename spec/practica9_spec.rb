@@ -16,7 +16,6 @@ describe Practica8 do
         @lista = Lista.new(0)
     end  
 
-
     context "Nodo" do
         it "Debe existir un Nodo de la lista con sus datos y su siguiente" do
             expect(@nodo.value).to eq(@book)
