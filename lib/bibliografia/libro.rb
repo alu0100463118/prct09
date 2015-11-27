@@ -1,32 +1,54 @@
-class Libro
-    attr_accessor :autor, :titulo, :serie, :editorial, :edicion, :f_pub, :isbn
-    def initialize(args)
-        @autor = args[:autor]
-        @titulo = args[:titulo]
-        @serie = args[:serie]
-        @editorial = args[:editorial]
-        @edicion = args[:edicion]
-        @f_pub = args[:f_pub]
-        @isbn = args[:isbn]
+class Bibliografia
+    
+    include Comparable
+    
+    attr_accessor :autor, :titulo, :fecha
+    
+    def initialize(autor, titulo, fecha)
+        @autor = autor
+        @titulo = titulo
+        @fecha = fecha
     end
     
-    def to_s
-        names =""
-        isbns =""
-        i=0
-        while i < @autor.count
-            if i != @autor.count-1
-                names= names + "#{@autor[i]}, "
-            else
-                names= names + "#{@autor[i]}."
-            end
-            i=i+1
+    def <=> (other)
+        if @autor == other.autor
+            @titulo <=> other.titulo
+        else
+            @autor <=> other.autor
         end
-        i=0
-        while i < @isbn.count
-            isbns= isbns + "#{@isbn[i]}\n"
-            i=i+1
-        end
-        "#{names}\n#{@titulo}\n#{@serie}\n#{@editorial};\n#{@edicion}\n(#{@f_pub})\n#{isbns}"
+    end
+    
+end
+
+class Libro < Bibliografia
+    
+    attr_accessor :serie, :editorial, :edicion, :isbn
+    
+    def initialize(autor, titulo, fecha, serie, editorial, edicion, isbn)
+        super(autor, titulo, fecha)
+        @serie = serie
+        @editorial = editorial
+        @edicion = edicion
+        @isbn = isbn
+    end
+end
+
+class Revista < Bibliografia
+    
+    attr_accessor :issn
+    
+    def initialize(autor, titulo, fecha, isnn)
+        super(autor, titulo, fecha)
+        @isnn = issn
+    end
+end
+
+class Electronico < Bibliografia
+    
+    attr_accessor :url
+    
+    def initialize(autor, titulo, fecha, url)
+        super(autor, titulo, fecha)
+        @url = url
     end
 end
