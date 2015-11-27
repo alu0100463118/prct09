@@ -1,4 +1,4 @@
-class Bibliografia
+class Biblio
     
     include Comparable
     
@@ -20,7 +20,7 @@ class Bibliografia
     
 end
 
-class Libro < Bibliografia
+class Libro < Biblio
     
     attr_accessor :serie, :editorial, :edicion, :isbn
     
@@ -33,7 +33,7 @@ class Libro < Bibliografia
     end
 end
 
-class Revista < Bibliografia
+class Revista < Biblio
     
     attr_accessor :issn
     
@@ -43,7 +43,7 @@ class Revista < Bibliografia
     end
 end
 
-class Electronico < Bibliografia
+class Electronico < Biblio
     
     attr_accessor :url
     

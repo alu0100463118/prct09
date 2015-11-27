@@ -1,99 +1,116 @@
 require 'spec_helper'
 require 'bibliografia'
 
-describe Practica8 do
-    before :all do 
-        @book  = Libro.new({:autor => ["Dave Thomas", "Andy Hunt", "Chad Fowler"], :titulo => "Programming Ruby 1.9 & 2.0: The Pragmatic Programmers Guide", :serie => "The Facets of Ruby", :editorial => "Pragmatic Bookshelf", :edicion => "4 edition", :f_pub => "July 7, 2013", :isbn => ["ISBN-13: 978-1937785499", "ISBN-10: 1937785491"]})
-        @book1 = Libro.new({:autor => ["Scott Chacon"], :titulo => "Pro Git 2009th Edition", :serie => "Pro", :editorial => "Apress", :edicion => "2009 edition", :f_pub => "August 27, 2009", :isbn => ["ISBN-13: 978-1430218333", "ISBN-10: 1430218339"]})
-        @book2 = Libro.new({:autor => ["David Flanagan", "Yukihiro Matsumoto"], :titulo => "The Ruby Programming Language", :serie => "Serie", :editorial => "O’Reilly Media", :edicion => " 1 edition", :f_pub => "February 4, 2008", :isbn => ["ISBN-10: 0596516177", "ISBN-13: 978-0596516178"]})
-        @book3 = Libro.new({:autor => ["David Chelimsky", "Dave Astels", " Bryan Helmkamp", "Dan North", "Zach Dennis", "Aslak Hellesoy"], :titulo => "The RSpec Book: Behaviour Driven Development with RSpec, Cucumber, and Friends", :serie => "The Facets of Ruby", :editorial => "Pragmatic Bookshelf", :edicion => "1 edition", :f_pub => "December 25, 2010", :isbn => ["ISBN-10: 1934356379", "ISBN-13: 978-1934356371",]})
-        @book4 = Libro.new({:autor => ["Richard E. Silverman"], :titulo => "Git Pocket Guide", :serie => "Serie", :editorial => "O’Reilly Media", :edicion => "1 edition", :f_pub => "August 2, 2013", :isbn => ["ISBN-10: 1449325866", "ISBN-13: 978-1449325862"]})    
-        @art_rev = ArticuloRevista.new({:autor => ["Juan Castagnino"], :titulo => "Tecnicas, materiales y aplicaicones en nanotecnologia", :sitio_pub => "Bioquimica Clinica", :volumen_revista => "24", :num_pag => "2", :f_pub => "April, 2007"})
-        @art_per = ArticuloPeriodico.new({:autor => ["Adam Davidson"], :titulo => "Saving the World, Startup-Style", :sitio_pub => "The New York Times", :num_pag => "3", :f_pub => "Nov 17, 2015"})
-        @dc_elec = DocumentoElectronico.new({:autor => ["Kike Garcia"], :titulo => "Internet Explorer empieza a sospechar que no es tu navegador predeterminado", :sitio_pub => "elmundotoday.com", :num_pag => "1", :f_pub => "September 24, 2013"})
-        
-        @nodo  = Nodo.new(@book)
-        @lista = Lista.new(0)
-    end  
-
-
-    context "Nodo" do
-        it "Debe existir un Nodo de la lista con sus datos y su siguiente" do
-            expect(@nodo.value).to eq(@book)
-            expect(@nodo.next).to eq(nil)
-        end
-    end    
+describe Bibliografia do
+  
+  before :each do
     
-    context "Lista" do
-        it "Se extrae el primer elemento de la lista" do
-            @lista.push(@book4)
-            @lista.push(@art_rev)
-            @lista.push(@book2)
-            @lista.push(@art_per)
-            @lista.push(@book)
-            @lista.ext
-            expect(@lista.inicio).to eq(@art_per)
-        end
+        @lista = Lista.new()
         
-        it "Se puede insertar un elemento" do
-            @lista.push(@book4)
-            expect(@lista.inicio).to eq(@book4)
-        end
+        @r1 = Libro.new(["Dave Thomas", "Andy Hunt", "Chad Fowler"], "Programming Ruby 1.9 & 2.0: The Pragmatic Programmers Guide", "The Facets of Ruby", "Pragmatic Bookshelf", "4 edition", "July 7, 2013",["ISBN-13: 978-1937785499", "ISBN-10: 1937785491"])
+        @r2 = Revista.new(["Scott Chacon"], "Pro Git 2009th Edition", "August 27, 2009", ["ISSN-13: 978-1430218333", "ISSN-10: 1430218339"])
+        @r3 = Electronico.new(["David Flanagan", "Yukihiro Matsumoto"], "The Ruby Programming Language", "February 4, 2008", "http://0596516177IS978_0596516178")
+              
+        @n1 = Nodo.new(@r1)
+        @n2 = Nodo.new(@r2)
+        @n3 = Nodo.new(@r3)
         
-        it "Se pueden insertar varios elementos" do
-            @lista.pushf(@book4)
-            @lista.push(@art_rev)
-            @lista.push(@book2)
-            @lista.push(@dc_elec)
-            @lista.push(@book)
-            expect(@lista.inicio).to eq(@book)
-            @lista.ext
-            expect(@lista.inicio).to eq(@dc_elec)
-            @lista.ext
-            expect(@lista.inicio).to eq(@book2)
-            @lista.ext
-            expect(@lista.inicio).to eq(@art_rev)
-            @lista.ext
-            expect(@lista.inicio).to eq(@book4)
-        end
-        
-        it "Extraer el ultimo elemento del examen" do
-            @lista.pushf(@art_rev)
-            @lista.push(@book3)
-            @lista.push(@art_per)
-            @lista.push(@book1)
-            @lista.push(@dc_elec)
-            @lista.extfin
-            expect(@lista.fin).to eq(@book3)
-        end    
-        
-        it "Las lista enlazadas se deben poder recorrer en ambos sentidos" do
-            @lista.pushf(@dc_elec)
-            @lista.push(@book3)
-            @lista.push(@art_per)
-            @lista.push(@book2)
-            @lista.push(@art_rev)
-            @lista.push(@book1)
-            @lista.push(@book)
-            expect(@lista.inicio).to eq(@book)
-            expect(@lista.fin).to eq(@dc_elec)
-            @lista.ext
-            @lista.extfin
-            expect(@lista.inicio).to eq(@book1)
-			expect(@lista.fin).to eq(@book3)
-            @lista.ext
-            @lista.extfin
-            expect(@lista.inicio).to eq(@art_rev)
-			expect(@lista.fin).to eq(@art_per)
-            @lista.ext
-            @lista.extfin
-            expect(@lista.inicio).to eq(@book2)
-            expect(@lista.fin).to eq(@book2)
-        end
-        
-        it "Debe existir una lista con su cabeza" do
-            @lista.push(@book)
-            expect(@lista.inicio).to eq(@book)
-        end
+  end
+
+  it "La lista debe tener su cabeza y su cola" do
+    @lista.add_principio(@r1)
+  	expect(@lista.head).to eq(@n1)
+  	expect(@lista.tail).to eq(@n1)
+  end
+
+  it "Debe poderse insertar un elemento en la lista por el principio" do
+    @lista.add_principio(@r1)
+    @lista.add_principio(@r2)
+    expect(@lista.head.value).to eq(@r2)
+  end
+  
+  it "Debe poderse insertar un elemento en la lista por el final" do
+    @lista.add_principio(@r1)
+    @lista.add_final(@r3)
+    expect(@lista.tail.value).to eq(@r3)
+  end
+  
+  it "Se extrae el primer elemento de la lista." do
+    @lista.add_principio(@r1)
+    @lista.add_principio(@r2)
+    @lista.borrar_principio
+    expect(@lista.head.value).to eq(@r1)
+  end
+  
+  it "Se extrae el ultimo elemento de la lista." do
+    @lista.add_principio(@r1)
+    @lista.add_final(@r3)
+    @lista.borrar_final
+    expect(@lista.head.value).to eq(@r1)
+  end
+  
+  it "Expectativa de herencia" do
+    expect(@r2.is_a?Biblio).to eq(true)
+  end
+  
+  it "Instancia" do
+    expect(@r3.instance_of?Electronico).to eq(true)
+  end
+
+  context "Lista enumerable" do
+    before :each do
+      @lista2 = Lista.new()
+      @lista2.add_muchos([1,2,6,9,4,3,5,8,7])
     end
+    
+    it "Comprobando que se han insertado bien todos los elementos en la lista" do
+      expect(@lista2.all?).to eq(true)
+    end
+    
+    it "Comprobando que se ha insertado bien al menos un elemento en la lista" do
+      expect(@lista2.any?).to eq(true)
+    end
+    
+    it "Comprobando el elemento maximo de la lista" do
+      expect(@lista2.max).to eq(9)
+    end
+    
+    it "Comprobando el elemento minimo de la lista" do
+      expect(@lista2.min).to eq(1)
+    end
+    
+    it "Contando elementos de la lista" do
+      expect(@lista2.count).to eq(9)
+    end
+    
+    it "Ordenando elementos de la lista" do
+      expect(@lista2.sort).to eq([1,2,3,4,5,6,7,8,9])
+    end
+    
+  end
+  
+  context "Referencia Comparable" do
+    before :each do
+        @r1 = Revista.new(["Scott Chacon"], "Pro Git 2009th Edition", "August 27, 2009", ["ISSN-13: 978-1430218333", "ISSN-10: 1430218339"])
+        @r2 = Electronico.new(["David Flanagan"], "The Ruby Programming Language", "February 4, 2008", "http://0596516177IS978_0596516178")
+        @r3 = Libro.new(["David Flanagan"], "Git Pocket Guide", "Serie", "Reilly Media", "1 edition",  "August 2, 2013", ["ISBN-10: 1449325866", "ISBN-13: 978-1449325862"])    
+   
+    end
+    
+    it "La Referencia del Autor Scott Chacon es mayor que la de David Flanagan" do
+      expect(@r1 > @r2).to eq(true)
+    end
+    
+    it "La referencia tres de David Flanagan es menor que la su referencia dos" do
+      expect(@r3 < @r2).to eq(true)
+    end
+    
+    it "La Referencia del Autor Scott Chacon es mayor que la de David Flanagan" do
+      expect(@r1 < @r2).to eq(false)
+    end
+    
+    #El que esta mas cerca de la A es el mas pequeño. Si es el mismo autor se pasa al titulo
+
+  end
+
 end
